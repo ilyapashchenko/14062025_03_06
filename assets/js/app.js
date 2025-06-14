@@ -1,83 +1,48 @@
-// ===== Глобальные переменные =====
-let currentUser = null;
+// assets/js/app.js
 
-// ===== Основной код =====
 document.addEventListener('DOMContentLoaded', () => {
-  // Проверяем, что Mini App запущена в Telegram
+  // Проверяем, запущено ли в Telegram Mini App
   if (window.Telegram?.WebApp) {
     const webApp = Telegram.WebApp;
     webApp.expand(); // Раскрываем на весь экран
     
-    // Пробуем получить данные пользователя
-    initUserData(webApp);
-    
-    // Инициализируем сервисы (пример)
-    initServices();
+    // Получаем данные пользователя
+    const user = webApp.initDataUnsafe?.user;
+    if (user) {
+      updateUserInfo(user);
+    } else {
+      // Пробуем разобрать initData вручную, если user не доступен
+      parseInitDataManually(webApp.initData);
+    }
   } else {
     // Режим разработки (если открыто в браузере)
-    console.log("Режим разработки: нет доступа к Telegram WebApp");
-    mockUserData();
-    initServices();
+    showDevModeMessage();
   }
 });
 
-// ===== Функции для работы с пользователем =====
-function initUserData(webApp) {
-  const user = webApp.initDataUnsafe?.user;
+// Обновляем информацию о пользователе в интерфейсе
+function updateUserInfo(user) {
+  const usernameElement = document.querySelector('.username');
+  const serviceList = document.getElementById('serviceList');
   
-  if (user) {
-    currentUser = {
-      id: user.id,
-      name: user.first_name || 'Пользователь',
-      username: user.username,
-      isPremium: user.is_premium || false
-    };
+  // Выводим имя и ID
+  if (usernameElement) {
+    usernameElement.textContent = `${user.first_name} (ID: ${user.id})`;
     
-    updateUserHeader();
-  } else {
-    console.log("Данные пользователя не получены");
-  }
-}
-
-function mockUserData() {
-  // Заглушка для разработки в браузере
-  currentUser = {
-    id: 123456789,
-    name: "Иван Тестовый",
-    username: "ivan_test",
-    isPremium: true
-  };
-  updateUserHeader();
-}
-
-function updateUserHeader() {
-  if (!currentUser) return;
-  
-  const nameElement = document.querySelector('.username');
-  const avatarElement = document.querySelector('.avatar');
-  
-  if (nameElement) {
-    nameElement.textContent = currentUser.name;
-    if (currentUser.isPremium) {
-      nameElement.innerHTML += ' <span class="premium">⭐️</span>';
+    // Добавляем значок Premium, если есть
+    if (user.is_premium) {
+      const premiumBadge = document.createElement('span');
+      premiumBadge.className = 'premium-badge';
+      premiumBadge.textContent = '⭐️';
+      usernameElement.appendChild(premiumBadge);
     }
   }
   
-  if (avatarElement) {
-    // Здесь можно добавить аватар (например, через Telegram.WebApp.initDataUnsafe.user.photo_url)
-    avatarElement.style.background = '#0088cc';
-    avatarElement.innerHTML = currentUser.name.charAt(0);
-  }
-}
-
-// ===== Функции для сервисов =====
-function initServices() {
-  // Загрузка сервисов из localStorage или API
-  const serviceList = document.getElementById('serviceList');
+  // Добавляем информацию о сервисах
   if (serviceList) {
     serviceList.innerHTML = `
       <div class="service-item">
-        <div class="service-name">Пример сервиса 1</div>
+        <div class="service-name">Пример сервиса 1 (User ID: ${user.id})</div>
         <div class="service-actions">
           <button class="action-btn">🗑️</button>
         </div>
@@ -86,44 +51,33 @@ function initServices() {
   }
 }
 
-// ===== Модальные окна =====
-function openModal() {
-  document.getElementById('overlay').style.display = 'block';
-  document.getElementById('addModal').style.display = 'block';
-}
-
-function closeModal() {
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('addModal').style.display = 'none';
-  document.getElementById('idInputModal').style.display = 'none';
-}
-
-function addByQR() {
-  closeModal();
-  // Здесь логика для QR-кода
-  alert("QR-код: функция в разработке");
-}
-
-function addByID() {
-  document.getElementById('addModal').style.display = 'none';
-  document.getElementById('idInputModal').style.display = 'block';
-}
-
-function submitId() {
-  const input = document.getElementById('serviceIdInput');
-  if (input && input.value) {
-    alert(`Добавлен сервис с ID: ${input.value}`);
-    input.value = '';
-    closeModal();
-  } else {
-    alert("Введите ID сервиса");
+// Парсим initData вручную
+function parseInitDataManually(initData) {
+  try {
+    const params = new URLSearchParams(initData);
+    const userJson = params.get('user');
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      updateUserInfo(user);
+    }
+  } catch (e) {
+    console.error("Ошибка при разборе initData:", e);
   }
 }
 
-// ===== Дополнительно =====
-// Для Telegram WebApp можно добавить обработчик событий
-if (window.Telegram?.WebApp) {
-  Telegram.WebApp.onEvent('viewportChanged', () => {
-    console.log("Viewport changed");
-  });
+// Сообщение в режиме разработки
+function showDevModeMessage() {
+  const usernameElement = document.querySelector('.username');
+  if (usernameElement) {
+    usernameElement.textContent = "Режим разработки (ID не доступен)";
+  }
+  
+  const serviceList = document.getElementById('serviceList');
+  if (serviceList) {
+    serviceList.innerHTML = `
+      <div class="service-item">
+        <div class="service-name">Пример сервиса 1 (Demo Mode)</div>
+      </div>
+    `;
+  }
 }
