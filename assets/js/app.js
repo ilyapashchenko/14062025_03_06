@@ -1,47 +1,51 @@
-// assets/js/app.js
+const telegram = window.Telegram.WebApp;
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Проверяем, что мы в Telegram Mini App
-  if (window.Telegram?.WebApp) {
-    const webApp = Telegram.WebApp;
-    
-    // 2. Пробуем получить ID пользователя (3 способа)
-    let userId = null;
-    
-    // Способ 1: Из initDataUnsafe (самый простой)
-    if (webApp.initDataUnsafe?.user?.id) {
-      userId = webApp.initDataUnsafe.user.id;
-    } 
-    // Способ 2: Ручной разбор initData
-    else if (webApp.initData) {
-      try {
-        const params = new URLSearchParams(webApp.initData);
-        const userJson = params.get('user');
-        if (userJson) {
-          userId = JSON.parse(userJson).id;
-        }
-      } catch (e) {
-        console.error("Ошибка разбора initData:", e);
-      }
-    }
-    
-    // 3. Выводим ID на экран
-    if (userId) {
-      // Заменяем весь контент страницы на ID
-      document.body.innerHTML = `
-        <div style="
-          font-size: 24px;
-          text-align: center;
-          margin-top: 50px;
-        ">
-          Ваш ID: <strong>${userId}</strong>
-        </div>
-      `;
-    } else {
-      document.body.innerHTML = "ID не получен. Откройте Mini App через Telegram.";
-    }
-    
+// Инициализация приложения
+telegram.ready();
+
+// Получение данных пользователя
+const user = telegram.initDataUnsafe.user;
+if (user) {
+  const usernameElement = document.querySelector('.username');
+  usernameElement.textContent = user.first_name || 'User';
+  console.log('User ID:', user.id); // Для отладки
+} else {
+  console.error('User data not available');
+  document.querySelector('.username').textContent = 'Unknown User';
+}
+
+// Функция для открытия модального окна
+function openModal() {
+  document.getElementById('addModal').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+// Функция для закрытия модального окна
+function closeModal() {
+  document.getElementById('addModal').style.display = 'none';
+  document.getElementById('idInputModal').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// Функция для открытия модального окна ввода ID
+function addByID() {
+  document.getElementById('addModal').style.display = 'none';
+  document.getElementById('idInputModal').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+// Заглушка для добавления по QR-коду
+function addByQR() {
+  alert('Функция сканирования QR-кода пока не реализована');
+}
+
+// Заглушка для отправки ID
+function submitId() {
+  const serviceId = document.getElementById('serviceIdInput').value;
+  if (serviceId) {
+    alert(`Добавлен сервис с ID: ${serviceId}`);
+    closeModal();
   } else {
-    document.body.innerHTML = "Это не Telegram Mini App.";
+    alert('Пожалуйста, введите ID');
   }
-});
+}
