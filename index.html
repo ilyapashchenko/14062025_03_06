@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TapTap</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="username">Name</div>
+      <div class="avatar"></div>        
+    </div>
+
+    <div class="title">Ваши сервисы:</div>
+    <div class="service-list" id="serviceList">
+    </div>
+<!-- когда пользователь нажимает на кнопку "add-button", вызывается функция "openModal" из app.js -->
+    <button class="add-button" onclick="openModal()">Добавить</button>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+  <div class="modal" id="addModal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <div class="modal-title">Выберите способ добавления</div>
+    <!-- когда пользователь нажимает на одну из этих кнопок, вызывается функция addByID или addByQR при помощи события onclick -->
+    <button class="modal-button" onclick="addByQR()">1) Добавить при помощи QR кода</button>
+    <button class="modal-button" onclick="addByID()">2) Добавить при помощи ID</button>
+  </div>
+
+  <div class="modal" id="idInputModal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <div class="modal-title">Введите ID</div>
+    <input id="serviceIdInput" type="text" placeholder="Например: 12345" />
+    <button class="add-button" onclick="submitId()">Добавить</button>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
