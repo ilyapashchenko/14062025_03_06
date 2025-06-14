@@ -1,3 +1,6 @@
+console.log('window.Telegram:', window.Telegram);
+console.log('window.Telegram.WebApp:', window.Telegram?.WebApp);
+
 window.addEventListener("DOMContentLoaded", () => {
   const output = document.createElement("div");
   output.style.fontFamily = "Arial, sans-serif";
