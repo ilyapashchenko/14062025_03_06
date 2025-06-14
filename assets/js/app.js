@@ -19,9 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const username = user.username || 'без username';
 
   // Покажем на странице ID
-  document.body.insertAdjacentHTML('beforeend', `
-    <p style="color:green;">✅ Telegram API подключен</p>
-    <p>🧑‍💻 user.id: <b>${userId}</b></p>
-    <p>🔤 username: <b>${username}</b></p>
-  `);
+  document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (!window.Telegram || !window.Telegram.WebApp) {
+      document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">❌ Telegram WebApp API не доступен. Открой из Telegram.</p>`);
+      return;
+    }
+    // ... дальше ваш код ...
+  }, 300); // 300 мс задержки
 });
