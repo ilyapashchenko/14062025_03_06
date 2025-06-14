@@ -1,0 +1,134 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #E5EDF8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.service-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.service-name {
+  font-size: 16px;
+}
+
+.button {
+  padding: 6px 12px;
+  background-color: #fdf9f1;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #fdf9f1;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #E5EDF8;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  padding: 20px;
+  z-index: 1000;
+  width: 90%;
+  max-width: 320px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.modal-button {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  margin: 6px 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  display: none;
+}
