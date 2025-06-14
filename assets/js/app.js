@@ -1,7 +1,9 @@
 // === Supabase Setup ===
 const SUPABASE_URL = 'https://ojeupytgwjyyjplwdyyh.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qZXVweXRnd2p5eWpwbHdkeXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk3NDc2OTQsImV4cCI6MjA2NTMyMzY5NH0.jXB0N2DT98YOgPEeZe-_FPBvmNmRCcPpqwrikQXP2bI';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Создаём клиента Supabase с уникальным именем переменной
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // === Telegram Setup ===
 const tg = window.Telegram.WebApp;
@@ -17,7 +19,7 @@ async function checkOrCreateUser() {
     return;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('users')
     .select('id')
     .eq('id', userId)
@@ -25,7 +27,7 @@ async function checkOrCreateUser() {
 
   if (error && error.code === 'PGRST116') {
     // Пользователя нет — добавляем
-    const { error: insertError } = await supabase
+    const { error: insertError } = await supabaseClient
       .from('users')
       .insert([{ id: userId }]);
 
@@ -45,7 +47,6 @@ async function checkOrCreateUser() {
 checkOrCreateUser();
 
 // --- Далее твои функции и остальной код ---
-
 
 // == UI Logic ==
 const services = [];
@@ -81,17 +82,6 @@ function closeModal() {
   document.getElementById('overlay').style.display = 'none';
 }
 
-// function addByQR() {
-//   closeModal();
-//   const place_name = prompt("Введите название места (QR):");
-//   const service_name = prompt("Введите название услуги:");
-//   const service_id = prompt("Введите ID услуги:");
-
-//   if (place_name && service_name && service_id) {
-//     addServiceToDB(place_name, service_id, service_name);
-//   }
-// }
-
 function addByID() {
   document.getElementById('addModal').style.display = 'none';
   document.getElementById('idInputModal').style.display = 'flex';
@@ -101,7 +91,7 @@ async function submitId() {
   const input = document.getElementById('serviceIdInput');
   const id = input.value.trim();
   if (id) {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('services')
       .select('*')
       .eq('place_id', id)
@@ -123,7 +113,7 @@ async function submitId() {
 
 // === Получить все сервисы из БД при старте ===
 async function loadServicesFromDB() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('services')
     .select('*');
 
@@ -138,7 +128,7 @@ async function loadServicesFromDB() {
 
 // === Добавить сервис в базу данных ===
 async function addServiceToDB(place_name, service_id, service_name) {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('services')
     .insert([
       {
