@@ -1,51 +1,19 @@
-const telegram = window.Telegram.WebApp;
+window.onload = () => {
+  if (window.Telegram && window.Telegram.WebApp) {
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-// Инициализация приложения
-telegram.ready();
+    const user = tg.initDataUnsafe?.user;
 
-// Получение данных пользователя
-const user = telegram.initDataUnsafe.user;
-if (user) {
-  const usernameElement = document.querySelector('.username');
-  usernameElement.textContent = user.first_name || 'User';
-  console.log('User ID:', user.id); // Для отладки
-} else {
-  console.error('User data not available');
-  document.querySelector('.username').textContent = 'Unknown User';
-}
-
-// Функция для открытия модального окна
-function openModal() {
-  document.getElementById('addModal').style.display = 'block';
-  document.getElementById('overlay').style.display = 'block';
-}
-
-// Функция для закрытия модального окна
-function closeModal() {
-  document.getElementById('addModal').style.display = 'none';
-  document.getElementById('idInputModal').style.display = 'none';
-  document.getElementById('overlay').style.display = 'none';
-}
-
-// Функция для открытия модального окна ввода ID
-function addByID() {
-  document.getElementById('addModal').style.display = 'none';
-  document.getElementById('idInputModal').style.display = 'block';
-  document.getElementById('overlay').style.display = 'block';
-}
-
-// Заглушка для добавления по QR-коду
-function addByQR() {
-  alert('Функция сканирования QR-кода пока не реализована');
-}
-
-// Заглушка для отправки ID
-function submitId() {
-  const serviceId = document.getElementById('serviceIdInput').value;
-  if (serviceId) {
-    alert(`Добавлен сервис с ID: ${serviceId}`);
-    closeModal();
+    if (user) {
+      document.body.innerHTML = `<h1>Привет, ${user.first_name}!</h1><p>Твой ID: ${user.id}</p>`;
+      console.log("User ID:", user.id);
+    } else {
+      document.body.innerHTML = "<p>Пользователь не определён (user пуст).</p>";
+      console.log("User не определён.");
+    }
   } else {
-    alert('Пожалуйста, введите ID');
+    document.body.innerHTML = "<p>Telegram WebApp API не доступен. Открой мини-приложение из Telegram.</p>";
+    console.log("Telegram WebApp API не доступен.");
   }
-}
+};
