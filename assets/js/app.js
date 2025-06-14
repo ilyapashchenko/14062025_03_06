@@ -1,7 +1,8 @@
 // === Supabase Setup ===
 const SUPABASE_URL = 'https://ojeupytgwjyyjplwdyyh.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qZXVweXRnd2p5eWpwbHdkeXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk3NDc2OTQsImV4cCI6MjA2NTMyMzY5NH0.jXB0N2DT98YOgPEeZe-_FPBvmNmRCcPpqwrikQXP2bI';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 
 // === Telegram Setup ===
 const tg = window.Telegram?.WebApp;
