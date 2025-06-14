@@ -1,25 +1,27 @@
-window.addEventListener('DOMContentLoaded', () => {
-  const tg = window.Telegram?.WebApp;
-
-  if (!tg) {
-    console.error('Telegram WebApp не доступен');
+document.addEventListener('DOMContentLoaded', () => {
+  // Проверим, доступен ли Telegram WebApp
+  if (!window.Telegram || !window.Telegram.WebApp) {
+    document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">❌ Telegram WebApp API не доступен. Открой из Telegram.</p>`);
     return;
   }
 
-  tg.expand(); // Открывает окно Telegram WebApp на весь экран
+  const tg = window.Telegram.WebApp;
+  tg.expand();
 
   const user = tg.initDataUnsafe?.user;
 
-  if (user) {
-    console.log('Пользователь Telegram:', user);
-    document.body.innerHTML += `
-      <div style="padding: 20px;">
-        <p><strong>ID:</strong> ${user.id}</p>
-        <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
-        <p><strong>Username:</strong> @${user.username || '—'}</p>
-      </div>
-    `;
-  } else {
-    console.warn('Пользователь Telegram не найден');
+  if (!user) {
+    document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">⚠️ Пользователь не определён. initDataUnsafe.user = null</p>`);
+    return;
   }
+
+  const userId = user.id;
+  const username = user.username || 'без username';
+
+  // Покажем на странице ID
+  document.body.insertAdjacentHTML('beforeend', `
+    <p style="color:green;">✅ Telegram API подключен</p>
+    <p>🧑‍💻 user.id: <b>${userId}</b></p>
+    <p>🔤 username: <b>${username}</b></p>
+  `);
 });
