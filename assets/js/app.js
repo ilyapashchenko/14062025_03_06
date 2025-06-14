@@ -14,6 +14,7 @@ const userId = user?.id;
 
 // === Проверка и добавление пользователя ===
 async function checkOrCreateUser() {
+  console.log('User ID:', userId);
   if (!userId) {
     console.error('Не удалось получить Telegram user ID');
     return;
