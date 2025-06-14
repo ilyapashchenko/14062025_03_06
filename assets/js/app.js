@@ -1,30 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Проверим, доступен ли Telegram WebApp
+window.addEventListener("DOMContentLoaded", () => {
+  const output = document.createElement("div");
+  output.style.fontFamily = "Arial, sans-serif";
+  output.style.fontSize = "16px";
+  output.style.padding = "20px";
+  document.body.appendChild(output);
+
   if (!window.Telegram || !window.Telegram.WebApp) {
-    document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">❌ Telegram WebApp API не доступен. Открой из Telegram.</p>`);
+    output.innerHTML = "❌ Telegram WebApp API не доступен. Открой мини-приложение из Telegram.";
+    console.error("Telegram WebApp API не доступен. Открой из Telegram.");
     return;
   }
 
   const tg = window.Telegram.WebApp;
-  tg.expand();
+  tg.ready(); // сообщаем Telegram, что всё загружено
 
   const user = tg.initDataUnsafe?.user;
 
   if (!user) {
-    document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">⚠️ Пользователь не определён. initDataUnsafe.user = null</p>`);
+    output.innerHTML = "⚠️ Пользователь Telegram не найден.";
+    console.warn("Пользователь не определён, initDataUnsafe:", tg.initDataUnsafe);
     return;
   }
 
-  const userId = user.id;
-  const username = user.username || 'без username';
+  // Выводим данные
+  output.innerHTML = `
+    <b>✅ Telegram API подключен</b><br><br>
+    <b>ID:</b> ${user.id}<br>
+    <b>Имя:</b> ${user.first_name} ${user.last_name ?? ""}<br>
+    <b>Username:</b> @${user.username ?? "—"}
+  `;
 
-  // Покажем на странице ID
-  document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    if (!window.Telegram || !window.Telegram.WebApp) {
-      document.body.insertAdjacentHTML('beforeend', `<p style="color:red;">❌ Telegram WebApp API не доступен. Открой из Telegram.</p>`);
-      return;
-    }
-    // ... дальше ваш код ...
-  }, 300); // 300 мс задержки
+  console.log("Пользователь Telegram:", user);
 });
