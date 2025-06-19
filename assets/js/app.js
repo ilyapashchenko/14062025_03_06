@@ -1,21 +1,18 @@
-// === Получение Telegram ID пользователя ===
-window.addEventListener('DOMContentLoaded', () => {
-  if (window.Telegram && window.Telegram.WebApp) {
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // разворачивает мини-приложение
+    // Важно! Убедитесь, что Telegram.WebApp определён — 
+    // это будет работать только в Telegram WebApp, запущенном через бота.
+    const webApp = window.Telegram.WebApp;
 
-    const user = tg.initDataUnsafe?.user;
-
-    if (user && user.id) {
-      const userId = user.id;
-      console.log('✅ Telegram ID пользователя:', userId);
-      document.body.innerHTML += `<p>✅ Telegram ID: ${userId}</p>`;
+    // В initDataUnsafe содержатся данные о пользователе, среди них user.id
+    const userData = webApp.initDataUnsafe.user;
+    if (userData) {
+        const userId = userData.id;
+        console.log("User ID:", userId);
+        // Далее используете userId, как вам нужно
     } else {
-      console.warn('⚠️ Не удалось получить информацию о пользователе');
-      document.body.innerHTML += `<p>⚠️ Пользователь не найден</p>`;
+        // Если запуск веб-аппа не из Telegram, userData может быть не определён
+        console.log("Webhook launched outside Telegram or user not found");
     }
-  } else {
-    console.error('❌ Telegram WebApp API не доступен');
-    document.body.innerHTML += `<p>❌ Telegram WebApp API не доступен. Открой мини-приложение из Telegram.</p>`;
-  }
-});
+
+    // Можно «развернуть» webapp на весь экран (опционально)
+    webApp.expand();
+
