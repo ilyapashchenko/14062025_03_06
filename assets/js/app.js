@@ -4,6 +4,7 @@
 
     // В initDataUnsafe содержатся данные о пользователе, среди них user.id
     const userData = webApp.initDataUnsafe.user;
+    console.log("Telegram объект:", window.Telegram);
     if (userData) {
         const userId = userData.id;
         console.log("User ID:", userId);
